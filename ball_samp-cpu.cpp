@@ -33,5 +33,11 @@ int main(){
                 int bin = min(static_cast<int>(distance * bins), bins - 1);
                 histogram[bin]++; //populate bin within that range, not cumulative
             }
-
+        cout << "Dimension " << d << ":" << endl;
+        for(auto& h : histogram){
+            cout << h / count << " ";
+        }
+        cout << endl;
+    }
+    return 0;
 }
