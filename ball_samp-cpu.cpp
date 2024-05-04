@@ -20,5 +20,18 @@ int main(){
         fill(histogram.begin(), histogram.end(), 0); //fill with 0s
         int count = 0;
     }
+        for(int i = 0; i < samples; ++i){
+            double sum = 0;
+            vector<double> point(d);
+            for(int j = 0; j < d; ++j){
+                point[j] = dis(gen);
+                sum += point[j] * point[j];
+            }
+            if(sum <= 1){
+                count++;
+                double distance = 1-sqrt(sum);
+                int bin = min(static_cast<int>(distance * bins), bins - 1);
+                histogram[bin]++; //populate bin within that range, not cumulative
+            }
 
 }
