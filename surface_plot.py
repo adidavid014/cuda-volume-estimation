@@ -15,10 +15,10 @@ fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d') #3-d surface plot
 
 surf = ax.plot_surface(X, Y, Z, cmap='viridis') #needed to add color
-ax.set_xlabel('dimension: ')
-ax.set_ylabel('bin')
-ax.set_zlabel('normal count')
+ax.set_xlabel('Dimension')
+ax.set_ylabel('Bin')
+ax.set_zlabel('Normal Count')
 
 fig.colorbar(surf)
 
-plt.show()
+plt.savefig('3-d_surface_plot.png')
