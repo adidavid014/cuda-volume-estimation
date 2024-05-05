@@ -2,22 +2,24 @@
 #include <vector>
 #include <random>
 #include <cmath>
+#include <fstream>
 
 using namespace std;
 
 int main(){
     const int D = 16;
     const int samples = 2000000;
-    const int bins = 100; //0.01, 0.02 --> 0.98, 0.99
-    //use random generator for points
+    const int bins = 100;
     random_device rd;
     mt19937 gen(rd());
     uniform_real_distribution<> dis(-1, 1);
 
     vector<double> histogram(bins, 0);
+    //using matplot to display data
+    ofstream outFile("histogram_data.txt");
 
     for(int d = 2; d <= D; ++d){
-        fill(histogram.begin(), histogram.end(), 0); //fill with 0s
+        fill(histogram.begin(), histogram.end(), 0);
         int count = 0;
         for(int i = 0; i < samples; ++i){
             double sum = 0;
@@ -30,15 +32,15 @@ int main(){
                 count++;
                 double distance = 1-sqrt(sum);
                 int bin = min(static_cast<int>(distance * bins), bins - 1);
-                histogram[bin]++; //populate bin within that range, not cumulative
+                histogram[bin]++;
             }
         }
-        cout << "Dimension " << d << ":" << endl;
-        for(auto& h : histogram){
-            cout << h / count << " ";
+        outFile << d;
+        for(auto h : histogram){
+            outFile << " " << h / count;
         }
-        cout << endl;
-    
+        outFile << endl;
     }
+    outFile.close();
     return 0;
 }
