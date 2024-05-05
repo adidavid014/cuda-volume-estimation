@@ -10,8 +10,8 @@ clean:
 	rm -f *.o ball_samp-cpu
 
 #running cuda
-#nvcc -arch=sm_70 -o test test.cu
+#module load cuda/12.0
+#nvcc -arch=sm_70 -o ball_samp-cuda ball_samp-cuda.cu
 #srun --partition=gpu --pty bash
-#module load cudo/12.0
-#./test
+#./ball_samp-cuda
 #exit
