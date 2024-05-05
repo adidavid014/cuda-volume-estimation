@@ -9,7 +9,7 @@ ball_samp-cpu.o: ball_samp-cpu.cpp
 clean: 
 	rm -f *.o ball_samp-cpu
 
-#running cuda
+#How to run cuda file
 #module load cuda/12.0
 #nvcc -arch=sm_70 -o ball_samp-cuda ball_samp-cuda.cu
 #srun --partition=gpu --pty bash
