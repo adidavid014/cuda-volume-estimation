@@ -9,3 +9,9 @@ data = np.loadtxt('histogram_data.txt')
 X = data[:, 0]
 Y = np.arange(1, 101)
 X, Y = np.meshgrid(X, Y)
+
+Z = np.transpose(data[:,1:])
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d') #3-d surface plot
+
+surf = ax.plot_surface(X, Y, Z, cmap='viridis') #needed to add color
