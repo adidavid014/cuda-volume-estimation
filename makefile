@@ -9,4 +9,9 @@ ball_samp-cpu.o: ball_samp-cpu.cpp
 clean: 
 	rm -f *.o ball_samp-cpu
 
-#nvcc -std=c++11 -Xcompiler -Wall test.cu -o test
+#running cuda
+#nvcc -arch=sm_70 -o test test.cu
+#srun --partition=gpu --pty bash
+#module load cudo/12.0
+#./test
+#exit
