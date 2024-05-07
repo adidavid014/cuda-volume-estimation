@@ -36,9 +36,12 @@ int main(){
             }
         }
         outFile << d;
+        cout << "Dimension: " << d << ":" << endl;
         for(auto h : histogram){
+            cout << h/countHost << " ";
             outFile << " " << h / count;
         }
+        cout << endl;
         outFile << endl;
     }
     outFile.close();
