@@ -6,9 +6,9 @@
 
 using namespace std;
 
-__global__ void computeHistogram(int d, int samples, int bins, double *histogram, int *count){
+__global__ void computeHistogram(int d, int samples, int bins, double *histogram, int *count) {
     int idx = threadIdx.x + blockIdx.x * blockDim.x;
-    if(idx < samples){
+    if (idx < samples) {
         curandState state;
         curand_init(1234, idx, 0, &state);
 
@@ -17,10 +17,10 @@ __global__ void computeHistogram(int d, int samples, int bins, double *histogram
             double value = curand_uniform_double(&state) * 2 - 1;
             sum += value * value;
         }
-        if(sum <= 1){
+        if(sum <= 1) {
             atomicAdd(count, 1);
             double distance = 1-sqrt(sum);
-            int bin = min(static_cast<int>(distance * bins), bins-1);
+            int bin = min(static_cast<int>(distance * bins), bins - 1);
             atomicAdd(&histogram[bin], 1.0);
         }
     }
@@ -30,43 +30,52 @@ int main() {
     const int D = 16;
     const int samples = 2000000;
     const int bins = 100;
+
     vector<double> histogramHost(bins, 0);
     double *histogramDevice;
     cudaMalloc(&histogramDevice, bins * sizeof(double));
+
     int countHost = 0;
     int *countDevice;
     cudaMalloc(&countDevice, sizeof(int));
-    const int blockSize = 256;
-    const int numBlocks = (samples+blockSize-1)/blockSize;
 
-    //adding matplot output
+    const int blockSize = 256;
+    const int numBlocks = (samples + blockSize - 1) / blockSize;
+
     ofstream outFile("histogram_data.txt");
 
-    for(int d = 2; d <= D; ++d){
+    for (int d = 2; d <= D; ++d) {
         cudaMemset(histogramDevice, 0, bins * sizeof(double));
         cudaMemset(countDevice, 0, sizeof(int));
+
         computeHistogram<<<numBlocks, blockSize>>>(d, samples, bins, histogramDevice, countDevice);
         cudaDeviceSynchronize();
 
-        //finding driver error 
+        // Check for any CUDA errors
         cudaError_t error = cudaGetLastError();
         if (error != cudaSuccess) {
             cout << "CUDA error: " << cudaGetErrorString(error) << endl;
             break;
         }
+
         cudaMemcpy(&countHost, countDevice, sizeof(int), cudaMemcpyDeviceToHost);
         cudaMemcpy(histogramHost.data(), histogramDevice, bins * sizeof(double), cudaMemcpyDeviceToHost);
 
-        if(countHost > 0){
+        if (countHost > 0) {
             outFile << d;
+            cout << "Dimension: " << d << ":" << endl;
             for (auto h : histogramHost) {
+                cout << h/countHost << " ";
                 outFile << " " << h / countHost;
             }
+            cout << endl;
             outFile << endl;
         }
     }
+
     outFile.close();
     cudaFree(histogramDevice);
     cudaFree(countDevice);
+
     return 0;
 }
